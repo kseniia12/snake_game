@@ -1,15 +1,23 @@
+const Snake = {
+    initial_X: 0,
+    initial_Y: 2,
+    finally_X: 0,
+    finally_Y: 0,
+}
+
 const searchPlayingField = document.querySelector('.playing__field')
+
 const field = [
-    [1,0,0,0,0,0,1,0],
     [0,0,1,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
-    [0,1,1,0,0,0,0,0],
-    [0,0,0,1,0,0,0,0],
-    [1,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
 ];
-
-function checkField(field){
+console.log(field[3][4])
+function drowUi(){
     for (let i=0; i<field.length; i++){
         const rowsField = document.createElement("div")
         rowsField.className="rows-field"
@@ -29,5 +37,26 @@ function checkField(field){
         searchPlayingField.append(rowsField)
     }
 }
+drowUi()
 
-checkField(field)
+
+function rerender(){
+    searchPlayingField.innerHTML='';
+    drowUi()
+}
+
+document.addEventListener('keydown', function(event) {
+    if (event.code == 'KeyS') {
+      Snake.finally_X = Snake.initial_X + 1
+      field[Snake.initial_X][Snake.initial_Y] = 0
+      field[Snake.finally_X][Snake.initial_Y] = 1
+      Snake.initial_X = Snake.finally_X
+      rerender()
+    }
+    console.log(Snake.initial_X)
+  });
+
+// const snake = (x, y) => {
+//     field[x][y] = 1
+//     rerender()
+// }
