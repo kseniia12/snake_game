@@ -1,0 +1,23 @@
+body {
+    background-color:black;
+}
+.playing{
+    padding-top: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.playing__field {
+    background-color:antiquewhite;
+    display: flex;
+    flex-direction: column;
+}
+.rows-field{
+    background-color: aqua;
+    display: flex;
+}
+.rows-item{
+    width: 30px;
+    height: 20px;
+    border: 0.2px solid black;
+}
