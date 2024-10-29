@@ -2,8 +2,9 @@ body {
     background-color:black;
 }
 .playing{
-    padding-top: 100px;
     display: flex;
+    flex-direction: column;
+    padding-top: 100px;
     align-items: center;
     justify-content: center;
 }
@@ -11,18 +12,53 @@ body {
     background-color:antiquewhite;
     display: flex;
     flex-direction: column;
+    width: 700px;
+    margin: auto;
+    position: relative;
+    z-index: 1;
 }
 .rows-field{
     background-color: aqua;
     display: flex;
+    width: 700px;
 }
+
 .rows-item{
     width: 50px;
     height: 50px;
+    /* background-image: url("./img/r.avif"); */
+    z-index: 1;
     /* border: 0.1px solid black; */
 }
-.endGame{
-    width: 50px;
-    height: 50px;
-    background-color:azure;
+.number_codes{
+    display: flex;
+    gap: 300px;
+    z-index: 2;
+}
+.current__count{
+    display: flex;
+}
+.record__account{
+    display: flex;
+}
+.endGame__section{
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background-color:rgb(42, 90, 133);
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content: center;
+    z-index: 2;
+}
+.level_selection{
+    color:rgb(241, 241, 241);
+}
+.count, .ccount{
+    color:aliceblue;
+}
+.record__account-count{
+     color: #FFFFFF;
 }

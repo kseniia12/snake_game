@@ -7,16 +7,32 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <section>
+        <div class="level_selection">Выбери уровень</div>
+        <button class="level1">Уровень 1</button>
+        <button class="level2">Уровень 2</button>
+        <button class="level3">Уровень 3</button>
+    </section>
     <section class="playing">
+        <div class="number_codes">
+            <div class="current__count">
+                <div class="ccount">Текущий счет:</div>
+                <div class="count">0</div> 
+            </div>
+            <div class="record__account">
+                <div class="ccount">Рекорд:</div>
+                <div class="record__account-count">0</div> 
+            </div>
+        </div>
+        
         <div class="playing__field" id="playing__field">
             <!-- <div class = "rows">
                 <div class="item"></div>
             </div> -->
             
         </div>
-        <div class="current__account" style="color: azure;">Счетчик: </div>
     </section>
     <script type="module" src="./field.js" ></script>
+    <script type="module" src="./gameReset.js" ></script>
 </body>
-
 </html>

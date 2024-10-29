@@ -1,8 +1,28 @@
 const Playing = document.querySelector('.playing')
 const searchPlayingField = document.querySelector('.playing__field')
 const currentAccount = document.querySelector('.current__account')
+const ccount = document.querySelector('.ccount')
+const count = document.querySelector('.count')
+const recordAcountCount = document.querySelector('.record__account-count')
 const endGame = document.createElement("div")
-let directionMovement = "up"
+let buttonResetGame;
+endGame.className = 'endGame__section'
+endGame.insertAdjacentHTML('afterbegin', 
+    `<div class="gameEndBlock">
+    <p>Конец игры</p>
+    <button class="button_reset_game">Начать сначала</button>
+    </div>
+    `
+)
+const level1 = document.querySelector('.level1')
+const level2 = document.querySelector('.level2')
+const level3 = document.querySelector('.level3')
+let directionMovement = "up";
+let intervalId
+let recordScore
+
+
+
 const field = [
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -113,6 +133,15 @@ const Snake = [
     
 
 ];
+
+
+let lengthSnake = 0;
+function increaseLengthSnake(){
+    lengthSnake = lengthSnake + 1
+    recordScore = lengthSnake
+    count.textContent = lengthSnake
+    recordAcountCount.textContent = recordScore
+}
 
 function getRandomInt(min, max) {
     min = Math.ceil(min);
@@ -272,74 +301,108 @@ function moveSnace(){
 
 
 
-function moveSnakeConstantly(directionMovement){
+function moveSnakeConstantly(){
     switch (directionMovement) {
         case 'down':
             if(field[Snake[0].x + 1][Snake[0].y] == 2){  
                 Snake.push({x: Snake[Snake.length-1].x, y:Snake[Snake.length-1].y, oldX: Snake[Snake.length-1].x, oldY: Snake[Snake.length-1].y})
                 field[Snake[0].x + 1][Snake[0].y] = 0
                 field[getRandomInt(0, 13)][getRandomInt(0, 13)] = 2
-                
+                increaseLengthSnake()
+            }
+            if (field[Snake[0].x + 1][Snake[0].y] === 1){
+                walkDown()
+                endGameOver()
             }
             walkDown()
-            Snake.forEach((item, index)=>{
-                if(field[Snake[0].x + 1][Snake[0].y] === 1){
-                    alert('dsd')
-                    
-                }
-            })
             break;
         case 'up':
                 if(field[Snake[0].x - 1][Snake[0].y] == 2){
                     Snake.push({x: Snake[Snake.length-1].x, y:Snake[Snake.length-1].y, oldX: Snake[Snake.length-1].x, oldY: Snake[Snake.length-1].y})
                     field[Snake[0].x - 1][Snake[0].y] = 0
                     field[getRandomInt(0, 13)][getRandomInt(0, 13)] = 2
+                    increaseLengthSnake()
+                }
+                if(field[Snake[0].x - 1][Snake[0].y] === 1){
+                    walkUp()
+                    endGameOver()
                 }
             walkUp()
-            Snake.forEach((item, index)=>{
-                if(field[Snake[0].x - 1][Snake[0].y] === 1){
-                    alert('dsd')
-                }
-            })
             break;
         case 'right':
             if(field[Snake[0].x][Snake[0].y+1] == 2){
                 Snake.push({x: Snake[Snake.length-1].x, y:Snake[Snake.length-1].y, oldX: Snake[Snake.length-1].x, oldY: Snake[Snake.length-1].y})
                 field[Snake[0].x][Snake[0].y+1] = 0
                 field[getRandomInt(0, 13)][getRandomInt(0, 13)] = 2
+                increaseLengthSnake()
+                rerender()
+            }
+            if(field[Snake[0].x][Snake[0].y+1] === 1){
+                walkRight()
+                endGameOver()
             }
             walkRight()
-            Snake.forEach((item, index)=>{
-                if(field[Snake[0].x][Snake[0].y+1] === 1){
-                    alert('dsd')
-                }
-            })
             break;
         case 'left':
             if(field[Snake[0].x][Snake[0].y-1] == 2){
                 Snake.push({x: Snake[Snake.length-1].x, y:Snake[Snake.length-1].y, oldX: Snake[Snake.length-1].x, oldY: Snake[Snake.length-1].y})
                 field[Snake[0].x][Snake[0].y-1] = 0
                 field[getRandomInt(0, 13)][getRandomInt(0, 13)] = 2
-                
+                increaseLengthSnake()
+                rerender()
+            }
+            if(field[Snake[0].x][Snake[0].y-1] === field[Snake[0].x][Snake[0].y]){
+                walkLeft()
+                endGameOver()
             }
             walkLeft()
-            Snake.forEach((item, index)=>{
-                if(field[Snake[0].x][Snake[0].y-1] === field[Snake[0].x][Snake[0].y]){
-                    
-                }
-            })
+           
 
         break;
       }
 }
+let t = (()=>setInterval)
+
+const createInterval = (time) => {
+    if (intervalId) {
+        clearInterval(intervalId)
+    }
+   intervalId = setInterval(moveSnakeConstantly, time)
+}
 
 
-Playing.before(endGame)
+
+function speed1(){
+    createInterval(200)
+}
+function speed2(){
+    createInterval(400)
+}
+function speed3(){
+    createInterval(600)
+}
+
+level1.addEventListener("click", speed1);
+level2.addEventListener("click", speed2);
+level3.addEventListener("click", speed3);
 
 
-let time = setInterval(()=>{
-    moveSnakeConstantly(directionMovement)
-}, 300)
 
+function endGameOver(){
+    searchPlayingField.before(endGame)
+    buttonResetGame = endGame.querySelector('.button_reset_game')
+    buttonResetGame.addEventListener('click' ,startGameOver)
+    level1.removeEventListener("click", speed1);
+    level2.removeEventListener("click", speed2);
+    level3.removeEventListener("click", speed3);
+    clearInterval(intervalId);
+    console.log(buttonResetGame)
 
-setTimeout(() => { clearInterval(time); alert('stop'); }, 100000);
+   
+
+}
+
+function startGameOver(){
+    alert("h")
+}
+// buttonResetGame.addEventListener("click", startGameOver);
