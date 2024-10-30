@@ -28,7 +28,7 @@ body {
     height: 50px;
     /* background-image: url("./img/r.avif"); */
     z-index: 1;
-    /* border: 0.1px solid black; */
+    border: 0.1px solid black;
 }
 .number_codes{
     display: flex;
@@ -52,6 +52,7 @@ body {
     align-items:center;
     justify-content: center;
     z-index: 2;
+    visibility: hidden;
 }
 .level_selection{
     color:rgb(241, 241, 241);
