@@ -14,6 +14,8 @@ let randomСoordinates = getRandomInt(4, 10);
 let directionMovementSnake = "up";
 let intervalId;
 let buttonResetGame;
+let checker = false;
+let t = () => setInterval;
 const Snake = [
     {
       x: randomСoordinates,
@@ -45,6 +47,12 @@ for (let rows = 0; rows < field.length; rows++) {
   }
 }
 
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
 function createCell(){
     return document.createElement("div");
 }
@@ -58,13 +66,20 @@ function drowUi() {
       rowsItem.className = `rows-item`;
       switch (field[i][j]) {
         case 0:
-            rowsItem.style.backgroundColor = "#546545";
+            rowsItem.style.backgroundImage = "url('./img/r.avif')";
+        
           break;
         case 1:
-            rowsItem.style.backgroundColor = "#563212";
+            rowsItem.style.backgroundImage = "url('./img/w.webp')";
+            rowsItem.style.backgroundSize = '100px';
+            rowsItem.style.backgroundRepeat = 'no-repeat';
+            rowsItem.style.backgroundPosition = 'center';
         break;
         case 2:
-            rowsItem.style.backgroundColor = "#782514";
+            rowsItem.style.backgroundImage = "url('./img/apple.avif')";
+            rowsItem.style.backgroundSize = '70px';
+            rowsItem.style.backgroundRepeat = 'no-repeat';
+            rowsItem.style.backgroundPosition = 'center';
           break;
       }
       rowsField.append(rowsItem);
@@ -93,12 +108,6 @@ function showScore(currentGameScore, recordGameScore){
     recordAcountCount.textContent = recordGameScore;
 }
 
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 function drawApple(x, y) {
   field[x][y] = 2;
 }
@@ -111,107 +120,101 @@ Snake.forEach((item) => {
   drawingSnake(item.x, item.y);
 });
 
+Snake.forEach((item) => {
+    if(item.x === apple.x && item.y === apple.y){
+        drawApple(getRandomInt(0, 13), getRandomInt(0, 13));
+    }
+});
+  
+
 rerender();
 
-function walkDown() {
-  Snake.forEach((item, index) => {
-    item.oldX = item.x;
-    item.oldY = item.y;
-    try {
-      if (index === 0) {
-        Snake[0].x = Snake[0].x + 1;
-      } else {
-        field[Snake[Snake.length - 1].x][Snake[Snake.length - 1].y] = 0;
-        Snake[index].y = Snake[index - 1].oldY;
-        Snake[index].x = Snake[index - 1].oldX;
-      }
-      field[item.x][item.y] = 1;
-    } catch (err) {
-      endGameOver();
-    }
-  });
-  rerender();
-}
 
-function walkUp() {
-  Snake.forEach((item, index) => {
-    item.oldX = item.x;
-    item.oldY = item.y;
-    try {
-      if (index === 0) {
-        Snake[index].x = Snake[index].x - 1;
-      } else {
-        field[Snake[Snake.length - 1].x][Snake[Snake.length - 1].y] = 0;
-        Snake[index].y = Snake[index - 1].oldY;
-        Snake[index].x = Snake[index - 1].oldX;
-      }
-      field[item.x][item.y] = 1;
-    } catch (err) {
-      endGameOver();
-    }
-  });
-  rerender();
+function unfurlSnakeDownAndUp(t){
+    Snake.forEach((item, index) => {
+        item.oldX = item.x;
+        item.oldY = item.y;
+        try {
+          if (index === 0) {
+            Snake[0].x = t;
+          } else {
+            field[Snake[Snake.length - 1].x][Snake[Snake.length - 1].y] = 0;
+            Snake[index].y = Snake[index - 1].oldY;
+            Snake[index].x = Snake[index - 1].oldX;
+          }
+          field[item.x][item.y] = 1;
+        } catch (err) {
+          loseGame();
+        }
+      });
+      rerender();
 }
-
+function unfurlSnakeLeftAndRight(t, w){
+    Snake.forEach((item, index) => {
+        item.oldX = item.x;
+        item.oldY = item.y;
+        if (index === 0) {
+          if (t === w) {
+            loseGame();
+            return;
+          }
+          Snake[0].y = t
+        } else {
+          field[Snake[Snake.length - 1].x][Snake[Snake.length - 1].y] = 0;
+          Snake[index].y = Snake[index - 1].oldY;
+          Snake[index].x = Snake[index - 1].oldX;
+        }
+        field[item.x][item.y] = 1;
+      });
+      rerender();
+}
 function walkRight() {
-  Snake.forEach((item, index) => {
-    item.oldX = item.x;
-    item.oldY = item.y;
-    if (index === 0) {
-      if (Snake[0].y + 1 === 14) {
-        endGameOver();
-        return;
-      }
-      Snake[0].y = Snake[0].y + 1;
-    } else {
-      field[Snake[Snake.length - 1].x][Snake[Snake.length - 1].y] = 0;
-      Snake[index].y = Snake[index - 1].oldY;
-      Snake[index].x = Snake[index - 1].oldX;
-    }
-    field[item.x][item.y] = 1;
-  });
-  rerender();
+    unfurlSnakeLeftAndRight(Snake[0].y + 1, 14)
 }
 
 function walkLeft() {
-  Snake.forEach((item, index) => {
-    item.oldX = item.x;
-    item.oldY = item.y;
-    if (index === 0) {
-      if (Snake[0].y - 1 == -1) {
-        endGameOver();
-      }
-      Snake[0].y = Snake[0].y - 1;
-    } else {
-      field[Snake[Snake.length - 1].x][Snake[Snake.length - 1].y] = 0;
-      Snake[index].y = Snake[index - 1].oldY;
-      Snake[index].x = Snake[index - 1].oldX;
-    }
-    field[item.x][item.y] = 1;
-  });
-  rerender();
+    unfurlSnakeLeftAndRight(Snake[0].y - 1, -1)
 }
 
+function walkDown() {
+    unfurlSnakeDownAndUp(Snake[0].x + 1)
+}
+
+function walkUp() {
+    unfurlSnakeDownAndUp(Snake[0].x - 1)
+}
 
 document.addEventListener("keyup", function (event) {
   switch (event.code) {
-    case "KeyS":
+    case "ArrowDown":
+    if(directionMovementSnake === 'up'  || checker === false)  { 
+            return;
+    }
       directionMovementSnake = "down";
       break;
-    case "KeyW":
+    case "ArrowUp":
+        if(directionMovementSnake === 'down' || checker === false) { 
+            return;
+        }
         directionMovementSnake = "up";
       break;
-    case "KeyD":
+    case "ArrowRight":
+        if(directionMovementSnake === 'left' || checker === false) { 
+            return;
+        }
         directionMovementSnake = "right";
       break;
-    case "KeyA":
+    case "ArrowLeft":
+        if(directionMovementSnake === 'right' || checker === false) { 
+            return;
+        }
         directionMovementSnake = "left";
       break;
   }
 });
 
 
-function moveSnakeCrossField(coordinateX, coordinateY, motionFunction){
+function increaseLengthSnake(coordinateX, coordinateY, motionFunction){
     if (field[coordinateX][coordinateY] == 2) {
         Snake.push({
           x: Snake[Snake.length - 1].x,
@@ -226,110 +229,32 @@ function moveSnakeCrossField(coordinateX, coordinateY, motionFunction){
       }
       if (field[coordinateX][coordinateY] === 1) {
         motionFunction();
-        endGameOver();
+        loseGame();
       }
       motionFunction();
 }
+
 
 
 function moveSnakeConstantly() {
     try {
   switch (directionMovementSnake) {
     case "down":
-        moveSnakeCrossField(Snake[0].x + 1, Snake[0].y, walkDown)
+        increaseLengthSnake(Snake[0].x + 1, Snake[0].y, walkDown)
       break;
     case "up":
-        moveSnakeCrossField(Snake[0].x - 1, Snake[0].y, walkUp)
-        // if (field[Snake[0].x - 1][Snake[0].y] == 2) {
-        //   Snake.push({
-        //     x: Snake[Snake.length - 1].x,
-        //     y: Snake[Snake.length - 1].y,
-        //     oldX: Snake[Snake.length - 1].x,
-        //     oldY: Snake[Snake.length - 1].y,
-        //   });
-        //   field[Snake[0].x - 1][Snake[0].y] = 0;
-        //   field[getRandomInt(0, 13)][getRandomInt(0, 13)] = 2;
-        //   calculateScoreGame();
-        //   showScore(currentGameScore, recordGameScore)
-        // }
-        // if (field[Snake[0].x - 1][Snake[0].y] === 1) {
-        //   walkUp();
-        //   endGameOver();
-        // }
-        // walkUp();
-     
-
+        increaseLengthSnake(Snake[0].x - 1, Snake[0].y, walkUp)
       break;
     case "right":
-        moveSnakeCrossField(Snake[0].x, Snake[0].y+1, walkRight)
-    //   if (field[Snake[0].x][Snake[0].y + 1] == 2) {
-    //     Snake.push({
-    //       x: Snake[Snake.length - 1].x,
-    //       y: Snake[Snake.length - 1].y,
-    //       oldX: Snake[Snake.length - 1].x,
-    //       oldY: Snake[Snake.length - 1].y,
-    //     });
-    //     field[Snake[0].x][Snake[0].y + 1] = 0;
-    //     field[getRandomInt(0, 13)][getRandomInt(0, 13)] = 2;
-    //     calculateScoreGame();
-    //     showScore(currentGameScore, recordGameScore)
-    //     rerender();
-    //   }
-    //   if (field[Snake[0].x][Snake[0].y + 1] === 1) {
-    //     walkRight();
-    //     endGameOver();
-    //   }
-    //   walkRight();
+        increaseLengthSnake(Snake[0].x, Snake[0].y+1, walkRight)
       break;
     case "left":
-        moveSnakeCrossField(Snake[0].x, Snake[0].y-1, walkLeft)
-    //   if (field[Snake[0].x][Snake[0].y - 1] == 2) {
-    //     Snake.push({
-    //       x: Snake[Snake.length - 1].x,
-    //       y: Snake[Snake.length - 1].y,
-    //       oldX: Snake[Snake.length - 1].x,
-    //       oldY: Snake[Snake.length - 1].y,
-    //     });
-    //     field[Snake[0].x][Snake[0].y - 1] = 0;
-    //     field[getRandomInt(0, 13)][getRandomInt(0, 13)] = 2;
-    //     calculateScoreGame();
-    //     showScore(currentGameScore, recordGameScore)
-    //     rerender();
-    //   }
-    //   if (field[Snake[0].x][Snake[0].y - 1] === field[Snake[0].x][Snake[0].y]) {
-    //     walkLeft();
-    //     endGameOver();
-    //   }
-    //   walkLeft();
-
+        increaseLengthSnake(Snake[0].x, Snake[0].y-1, walkLeft)
       break;
   }  } catch (err) {
-    endGameOver();
+    loseGame();
   }
 }
-
-
-        // if (field[Snake[0].x + 1][Snake[0].y] == 2) {
-        //   Snake.push({
-        //     x: Snake[Snake.length - 1].x,
-        //     y: Snake[Snake.length - 1].y,
-        //     oldX: Snake[Snake.length - 1].x,
-        //     oldY: Snake[Snake.length - 1].y,
-        //   });
-        //   field[Snake[0].x + 1][Snake[0].y] = 0;
-        //   field[getRandomInt(0, 13)][getRandomInt(0, 13)] = 2;
-        //   calculateScoreGame();
-        //   showScore(currentGameScore, recordGameScore)
-        // }
-        // if (field[Snake[0].x + 1][Snake[0].y] === 1) {
-        //   walkDown();
-        //   endGameOver();
-        // }
-        // walkDown();
-
-
-
-let t = () => setInterval;
 
 const createInterval = (time) => {
   if (intervalId) {
@@ -339,38 +264,45 @@ const createInterval = (time) => {
 };
 
 function speed1() {
+  checker = true
   createInterval(200);
 }
 function speed2() {
+  checker = true
   createInterval(400);
 }
 function speed3() {
+  checker = true
   createInterval(600);
 }
 
-level1.addEventListener("click", speed1);
-level2.addEventListener("click", speed2);
-level3.addEventListener("click", speed3);
+function addEventListenerSpeed(){
+    level1.addEventListener("click", speed1);
+    level2.addEventListener("click", speed2);
+    level3.addEventListener("click", speed3);
+}
 
-
-
-endGame.addEventListener('click', startGameOver)
-
-
-
-
-
-function endGameOver() {
-    gameEndBlock.style.visibility = "visible";
-    clearInterval(intervalId);
+addEventListenerSpeed()
+function removeEventListenerSpeed(){
     level1.removeEventListener("click", speed1);
     level2.removeEventListener("click", speed2);
     level3.removeEventListener("click", speed3);
 }
 
+endGame.addEventListener('click', startGameOver)
+
+
+function loseGame() {
+    gameEndBlock.style.visibility = "visible";
+    clearInterval(intervalId);
+    removeEventListenerSpeed()
+}
+
 function startGameOver() {
   gameEndBlock.style.visibility = "hidden";
   currentGameScore = 0;
+  randomСoordinates = getRandomInt(4, 10);
+  checker = false
   showScore(currentGameScore, recordGameScore)
   for (let i = 0; i < field.length; i++) {
     for (let j = 0; j < field[i].length; j++) {
@@ -387,24 +319,13 @@ function startGameOver() {
   Snake[0].y = randomСoordinates;
   Snake[1].x = Snake[0].x + 1;
   Snake[1].y = Snake[0].y;
-  console.log(Snake[0].x, Snake[0].y, Snake[1].x, Snake[1].y);
   Snake.forEach((item) => {
     drawingSnake(item.x, item.y);
-    console.log(Snake);
   });
-  // Snake.forEach((item)=>{
-  //     item[0].x = rx
-  //     item[0].y = ry
-  //     item[1].x = item[0].x + 1
-  //     item[1].y = item[0].y
-  //     console.log(Snake)
-
-  // })
   rerender()
-  directionMovementSnake = "left";
+  directionMovementSnake = "up";
   level1.addEventListener("click", speed1);
   level2.addEventListener("click", speed2);
   level3.addEventListener("click", speed3);
-  console.log("Это поле", field);
 }
-// buttonResetGame.addEventListener("click", startGameOver);
+
