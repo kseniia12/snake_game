@@ -57,7 +57,7 @@ body {
 .level_selection{
     color:rgb(241, 241, 241);
 }
-.count, .ccount{
+.count, .title_count{
     color:aliceblue;
 }
 .record__account-count{
