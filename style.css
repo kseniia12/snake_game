@@ -63,3 +63,9 @@ body {
 .record__account-count{
      color: #FFFFFF;
 }
+.menu{
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    margin-top: 60px;
+}

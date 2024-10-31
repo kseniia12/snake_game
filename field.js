@@ -15,7 +15,6 @@ const level2 = document.querySelector(".level2");
 const level3 = document.querySelector(".level3");
 let directionMovement = "up";
 let intervalId;
-let recordScore;
 
 const field = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -126,13 +125,26 @@ const Snake = [
   // },
 ];
 
+
+function showScore(lengthSnake, recordScore){
+    count.textContent = lengthSnake;
+    recordAcountCount.textContent = recordScore;
+}
+
 let lengthSnake = 0;
+let recordScore = 0;
+
 function increaseLengthSnake() {
   lengthSnake = lengthSnake + 1;
-  recordScore = lengthSnake;
-  count.textContent = lengthSnake;
-  recordAcountCount.textContent = recordScore;
+  if (recordScore < lengthSnake){
+    recordScore = lengthSnake
+  } else {
+    recordScore = recordScore
+  }
 }
+
+
+
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -171,7 +183,7 @@ function rerender() {
 }
 
 function walkDown() {
-  console.log(Snake);
+//   console.log(Snake);
   directionMovement = "down";
   Snake.forEach((item, index) => {
     item.oldX = item.x;
@@ -193,7 +205,7 @@ function walkDown() {
 }
 
 function walkUp() {
-  console.log(Snake);
+//   console.log(Snake);
   directionMovement = "up";
   Snake.forEach((item, index) => {
     item.oldX = item.x;
@@ -216,7 +228,7 @@ function walkUp() {
 }
 
 function walkRight() {
-  console.log(Snake);
+//   console.log(Snake);
   directionMovement = "right";
   Snake.forEach((item, index) => {
     item.oldX = item.x;
@@ -237,13 +249,12 @@ function walkRight() {
   rerender();
 }
 function walkLeft() {
-  console.log(Snake);
+//   console.log(Snake);
   directionMovement = "left";
   Snake.forEach((item, index) => {
     item.oldX = item.x;
     item.oldY = item.y;
     if (index === 0) {
-      console.log(Snake[index].y - 1);
       if (Snake[0].y - 1 == -1) {
         endGameOver();
       }
@@ -304,6 +315,7 @@ function moveSnakeConstantly() {
           field[Snake[0].x + 1][Snake[0].y] = 0;
           field[getRandomInt(0, 13)][getRandomInt(0, 13)] = 2;
           increaseLengthSnake();
+          showScore(lengthSnake, recordScore)
         }
         if (field[Snake[0].x + 1][Snake[0].y] === 1) {
           walkDown();
@@ -327,6 +339,7 @@ function moveSnakeConstantly() {
           field[Snake[0].x - 1][Snake[0].y] = 0;
           field[getRandomInt(0, 13)][getRandomInt(0, 13)] = 2;
           increaseLengthSnake();
+          showScore(lengthSnake, recordScore)
         }
         if (field[Snake[0].x - 1][Snake[0].y] === 1) {
           walkUp();
@@ -349,6 +362,7 @@ function moveSnakeConstantly() {
         field[Snake[0].x][Snake[0].y + 1] = 0;
         field[getRandomInt(0, 13)][getRandomInt(0, 13)] = 2;
         increaseLengthSnake();
+        showScore(lengthSnake, recordScore)
         rerender();
       }
       if (field[Snake[0].x][Snake[0].y + 1] === 1) {
@@ -368,6 +382,7 @@ function moveSnakeConstantly() {
         field[Snake[0].x][Snake[0].y - 1] = 0;
         field[getRandomInt(0, 13)][getRandomInt(0, 13)] = 2;
         increaseLengthSnake();
+        showScore(lengthSnake, recordScore)
         rerender();
       }
       if (field[Snake[0].x][Snake[0].y - 1] === field[Snake[0].x][Snake[0].y]) {
@@ -407,6 +422,9 @@ level3.addEventListener("click", speed3);
 endGame.addEventListener('click', startGameOver)
 
 
+console.log(lengthSnake)
+
+
 function endGameOver() {
   gameEndBlock.style.visibility = "visible";
   clearInterval(intervalId);
@@ -419,8 +437,8 @@ function endGameOver() {
 
 function startGameOver() {
   gameEndBlock.style.visibility = "hidden";
-  recordAcountCount.textContent = recordScore
-  count
+  lengthSnake = 0;
+  showScore(lengthSnake, recordScore)
   for (let i = 0; i < field.length; i++) {
     for (let j = 0; j < field[i].length; j++) {
       field[i][j] = 0;
