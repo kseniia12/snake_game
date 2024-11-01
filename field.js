@@ -7,6 +7,8 @@ const gameEndBlock = document.getElementById("gameEndBlock");
 const level1 = document.querySelector(".level1");
 const level2 = document.querySelector(".level2");
 const level3 = document.querySelector(".level3");
+const gameMode1 = document.querySelector(".game_mode_1");
+const gameMode2 = document.querySelector(".game_mode_2");
 const playingFieldLength = 14
 const playingFieldWidth = 14
 const field = new Array(playingFieldLength)
@@ -15,6 +17,7 @@ let directionMovementSnake = "up";
 let intervalId;
 let buttonResetGame;
 let checker = false;
+let game_mode = 0;
 let t = () => setInterval;
 const Snake = [
     {
@@ -155,6 +158,7 @@ function unfurlSnakeLeftAndRight(t, w){
         item.oldY = item.y;
         if (index === 0) {
           if (t === w) {
+            if (game_mode === 4)
             loseGame();
             return;
           }
@@ -186,25 +190,25 @@ function walkUp() {
 
 document.addEventListener("keyup", function (event) {
   switch (event.code) {
-    case "ArrowDown":
+    case "ArrowDown","KeyS":
     if(directionMovementSnake === 'up'  || checker === false)  { 
             return;
     }
       directionMovementSnake = "down";
       break;
-    case "ArrowUp":
+    case "ArrowUp","KeyW":
         if(directionMovementSnake === 'down' || checker === false) { 
             return;
         }
         directionMovementSnake = "up";
       break;
-    case "ArrowRight":
+    case "ArrowRight","KeyD":
         if(directionMovementSnake === 'left' || checker === false) { 
             return;
         }
         directionMovementSnake = "right";
       break;
-    case "ArrowLeft":
+    case "ArrowLeft","KeyA":
         if(directionMovementSnake === 'right' || checker === false) { 
             return;
         }
@@ -237,24 +241,29 @@ function increaseLengthSnake(coordinateX, coordinateY, motionFunction){
 
 
 function moveSnakeConstantly() {
-    try {
-  switch (directionMovementSnake) {
-    case "down":
-        increaseLengthSnake(Snake[0].x + 1, Snake[0].y, walkDown)
-      break;
-    case "up":
-        increaseLengthSnake(Snake[0].x - 1, Snake[0].y, walkUp)
-      break;
-    case "right":
-        increaseLengthSnake(Snake[0].x, Snake[0].y+1, walkRight)
-      break;
-    case "left":
-        increaseLengthSnake(Snake[0].x, Snake[0].y-1, walkLeft)
-      break;
-  }  } catch (err) {
-    loseGame();
-  }
-}
+
+        try {
+            switch (directionMovementSnake) {
+              case "down":
+                  increaseLengthSnake(Snake[0].x + 1, Snake[0].y, walkDown)
+                break;
+              case "up":
+                  increaseLengthSnake(Snake[0].x - 1, Snake[0].y, walkUp)
+                break;
+              case "right":
+                  increaseLengthSnake(Snake[0].x, Snake[0].y+1, walkRight)
+                break;
+              case "left":
+                  increaseLengthSnake(Snake[0].x, Snake[0].y-1, walkLeft)
+                break;
+            }  
+        } catch (err) {
+            game_mode === 4 ? loseGame() :  console.log("Режим 2");
+            }
+    }
+
+  
+
 
 const createInterval = (time) => {
   if (intervalId) {
@@ -275,20 +284,31 @@ function speed3() {
   checker = true
   createInterval(600);
 }
+function chooseGameMode1() {
+    game_mode = 4
+    console.log(game_mode)
+}
+function chooseGameMode2() {
+    game_mode = 5
+    console.log(game_mode)
+  }
 
 function addEventListenerSpeed(){
     level1.addEventListener("click", speed1);
     level2.addEventListener("click", speed2);
     level3.addEventListener("click", speed3);
+    gameMode1.addEventListener('click', chooseGameMode1)
+    gameMode2.addEventListener('click', chooseGameMode2)
 }
-
 addEventListenerSpeed()
+
 function removeEventListenerSpeed(){
     level1.removeEventListener("click", speed1);
     level2.removeEventListener("click", speed2);
     level3.removeEventListener("click", speed3);
+    gameMode1.removeEventListener('click', chooseGameMode1)
+    gameMode2.removeEventListener('click', chooseGameMode2)
 }
-
 endGame.addEventListener('click', startGameOver)
 
 
@@ -298,9 +318,14 @@ function loseGame() {
     removeEventListenerSpeed()
 }
 
+function crossFieldBoundary(){
+
+}
+
 function startGameOver() {
   gameEndBlock.style.visibility = "hidden";
   currentGameScore = 0;
+  game_mode = 0;
   randomСoordinates = getRandomInt(4, 10);
   checker = false
   showScore(currentGameScore, recordGameScore)
@@ -324,8 +349,6 @@ function startGameOver() {
   });
   rerender()
   directionMovementSnake = "up";
-  level1.addEventListener("click", speed1);
-  level2.addEventListener("click", speed2);
-  level3.addEventListener("click", speed3);
+  addEventListenerSpeed()
 }
 
