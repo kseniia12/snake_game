@@ -34,6 +34,32 @@ const snake = [
       oldY: 0,
     },
   ];
+  const block = [
+    {
+      x: 3,
+      y: 3,
+    },
+    {
+      x: 4,
+      y: 3,
+    },
+    {
+      x: 5,
+      y: 3,
+    },
+    {
+      x: 3,
+      y: 4,
+    },
+    {
+      x: 3,
+      y: 5,
+    },
+    {
+      x: 3,
+      y: 6,
+    },
+  ];
   const lengthSnake = snake.length
   const apple = {
     x: getRandomInt(0, 13),
@@ -78,8 +104,10 @@ function drowUi() {
         break;
         case 2:
           rowsItem.classList.add('rows-item-apple');
-  
-          break;
+        break;
+        case 3:
+          rowsItem.style.backgroundColor="#895263"
+        break;
       }
       rowsField.append(rowsItem);
     }
@@ -125,21 +153,28 @@ snake.forEach((item) => {
   drawingSnake(item.x, item.y);
 });
 
+function drawingBlock(x, y) {
+  field[x][y] = 3;
+}
+block.forEach((item) => {
+  drawingBlock(item.x, item.y);
+});
 
 rerender();
 
-function turnSnake(coordinatesSnakeY, restrictionExitFromField, t){
+function turnSnake(coordinatesSnake, restrictionExitFromField, coordinateAxis){
     snake.forEach((item, index) => {
+      console.log(coordinatesSnake)
         item.oldX = item.x;
         item.oldY = item.y;
-        if (index === 0) {
-       
-            if (game_mode === 4){}
-          if (coordinatesSnakeY === restrictionExitFromField) {
+        if (coordinatesSnake === restrictionExitFromField || 
+          (block.forEach((item) => {(coordinatesSnake == block[item.y] && coordinatesSnake == block[item.x])}))) {
             loseGame();
             return;
           }
-          (t == 'x') ? snake[0].x = coordinatesSnakeY : snake[0].y = coordinatesSnakeY
+        if (index === 0) {
+          
+          (coordinateAxis == 'x') ? snake[0].x = coordinatesSnake : snake[0].y = coordinatesSnake
          
         } else {
           field[snake[snake.length - 1].x][snake[snake.length - 1].y] = 0;
@@ -201,6 +236,7 @@ document.addEventListener("keyup", function (event) {
 
 
 function increaseLengthSnake(coordinateX, coordinateY, motionFunction){
+    if(field[coordinateX] === undefined) return loseGame();
     if (field[coordinateX][coordinateY] == 2) {
         snake.push({
           x: snake[snake.length - 1].x,
@@ -223,8 +259,6 @@ function increaseLengthSnake(coordinateX, coordinateY, motionFunction){
 
 
 function moveSnakeConstantly() {
-
-        try {
             switch (directionMovementSnake) {
               case "down":
                   increaseLengthSnake(snake[0].x + 1, snake[0].y, walkDown)
@@ -239,10 +273,9 @@ function moveSnakeConstantly() {
                   increaseLengthSnake(snake[0].x, snake[0].y-1, walkLeft)
                 break;
             }  
-        } catch (err) {
-            game_mode === 4 ? loseGame() :  console.log("Режим 2");
-            }
+     
     }
+
 
   
 
@@ -298,8 +331,9 @@ endGame.addEventListener('click', startGame)
 
 
 function loseGame() {
+  console.log(snake)
+  clearInterval(intervalId);
     gameEndBlock.style.visibility = "visible";
-    clearInterval(intervalId);
     removeEventListenerSpeed()
 }
 
