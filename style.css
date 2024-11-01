@@ -9,7 +9,7 @@ body {
     justify-content: center;
 }
 .playing__field {
-    background-color:antiquewhite;
+    background-image: url('./img/lawn.avif');
     display: flex;
     flex-direction: column;
     width: 700px;
@@ -18,7 +18,7 @@ body {
     z-index: 1;
 }
 .rows-field{
-    background-color: aqua;
+    background-image: url('./img/r.avif');
     display: flex;
     width: 700px;
 }
@@ -28,7 +28,71 @@ body {
     height: 50px;
     z-index: 1;
 }
-
+.rows-item-field{
+    background-image: url('./img/lawn.avif');
+}
+.rows-item-snake-up{
+    background-image: url('./img/snakeScales.webp');
+    background-repeat: no-repeat;
+    background-position: 10%;
+    background-size: 100px;
+    transform: rotate(90deg);
+}
+.rows-item-snake-down{
+    background-image: url('./img/snakeScales.webp');
+    background-repeat: no-repeat;
+    background-position: 10%;
+    background-size: 100px;
+    transform: rotate(90deg);
+}
+.rows-item-snake-left{
+    background-image: url('./img/snakeScales.webp');
+    background-repeat: no-repeat;
+    background-position: 10%;
+    background-size: 100px;
+    transform: rotate(180deg);
+}
+.rows-item-snake-right{
+    background-image: url('./img/snakeScales.webp');
+    background-repeat: no-repeat;
+    background-position: 10%;
+    background-size: 100px;
+    transform: rotate(180deg);
+}
+.rows-item-snake-header-up{
+    background-image: url('./img/snakeHead.jpeg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60px;
+    transform: rotate(180deg);
+}
+.rows-item-snake-header-down{
+    background-image: url('./img/snakeHead.jpeg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60px;
+    transform: rotate(360deg);
+}
+.rows-item-snake-header-right{
+    background-image: url('./img/snakeHead.jpeg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60px;
+    transform: rotate(270deg);
+}
+.rows-item-snake-header-left{
+    background-image: url('./img/snakeHead.jpeg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60px;
+    transform: rotate(90deg);
+}
+.rows-item-apple{
+    background-image: url('./img/apple.avif');
+    background-position: center;
+    background-size: 80px;
+    border-radius: 80%;
+}
 .number_codes{
     display: flex;
     gap: 300px;
