@@ -36,29 +36,31 @@ const snake = [
   ];
   const block = [
     {
-      x: 3,
+      x: 2,
+      y: 2,
+    },
+    {
+      x: 2,
       y: 3,
     },
     {
-      x: 4,
-      y: 3,
+      x: 10,
+      y: 9,
     },
     {
-      x: 5,
-      y: 3,
+      x: 10,
+      y: 8,
     },
     {
-      x: 3,
-      y: 4,
-    },
-    {
-      x: 3,
-      y: 5,
+      x: 2,
+      y: 12,
     },
     {
       x: 3,
-      y: 6,
+      y: 12,
     },
+  
+  
   ];
   const lengthSnake = snake.length
   const apple = {
@@ -106,7 +108,7 @@ function drowUi() {
           rowsItem.classList.add('rows-item-apple');
         break;
         case 3:
-          rowsItem.style.backgroundColor="#895263"
+          rowsItem.classList.add('block');
         break;
       }
       rowsField.append(rowsItem);
@@ -137,7 +139,8 @@ function showScore(currentGameScore, recordGameScore){
 
 function sendAppleCoordinates(coordinatesAppleX, coordinatesAppleY) {
   snake.forEach((item) => {
-    if(item.x === coordinatesAppleX && item.y === coordinatesAppleY){
+    if(item.x === coordinatesAppleX && item.y === coordinatesAppleY || 
+      block.forEach((item) => {item.x === coordinatesAppleX && item.y === coordinatesAppleY})){
         sendAppleCoordinates(getRandomInt(0, 13), getRandomInt(0, 13));
     } else {
       field[coordinatesAppleX][coordinatesAppleY] = 2;
@@ -167,8 +170,7 @@ function turnSnake(coordinatesSnake, restrictionExitFromField, coordinateAxis){
       console.log(coordinatesSnake)
         item.oldX = item.x;
         item.oldY = item.y;
-        if (coordinatesSnake === restrictionExitFromField || 
-          (block.forEach((item) => {(coordinatesSnake == block[item.y] && coordinatesSnake == block[item.x])}))) {
+        if (coordinatesSnake === restrictionExitFromField) {
             loseGame();
             return;
           }
@@ -249,9 +251,9 @@ function increaseLengthSnake(coordinateX, coordinateY, motionFunction){
         calculateScoreGame();
         showScore(currentGameScore, recordGameScore)
       }
-      if (field[coordinateX][coordinateY] === 1) {
-        motionFunction();
+      if (field[coordinateX][coordinateY] === 1 || field[coordinateX][coordinateY] === 3) {
         loseGame();
+        return
       }
       motionFunction();
 }
@@ -342,6 +344,7 @@ function crossFieldBoundary(){
 }
 
 function startGame() {
+  directionMovementSnake = "up";
   gameEndBlock.style.visibility = "hidden";
   currentGameScore = 0;
   game_mode = 0;
@@ -369,9 +372,13 @@ function startGame() {
   snake.forEach((item) => {
     drawingSnake(item.x, item.y);
   });
+  block.forEach((item) => {
+    drawingBlock(item.x, item.y);
+  });
+  
 
   rerender()
-  directionMovementSnake = "up";
+ 
   addEventListenerSpeed()
 }
 

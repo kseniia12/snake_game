@@ -93,6 +93,10 @@ body {
     background-size: 80px;
     border-radius: 80%;
 }
+.block{
+    background-image: url('./img/kamen.jpg');
+    background-position: center;
+}
 .number_codes{
     display: flex;
     gap: 300px;
